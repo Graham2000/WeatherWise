@@ -1,16 +1,17 @@
 const fetchWeather = (location, setWeatherData) => {
-      // Convert cloud coverage to inital caps
-  const convertCase = (descr) => {
-    let description = [...descr];
-    for (let i = 0; i < description.length; i++) {
-      if (i === 0) {
-        description[i] = description[i].toUpperCase();
-      } else if (description[i] === " ") {
-        description[i + 1] = description[i + 1].toUpperCase();
-      }
+  // Set UV description
+  const uvDescr = (index) => {
+    if (index >= 0 && index <= 2) {
+      return "Low";
+    } else if (index >= 3 && index <= 5) {
+      return "Moderate";
+    } else if (index >= 6 && index <= 7) {
+      return "High";
+    } else if (index >= 8 && index <= 10) {
+      return "Very high";
+    } else if (index >= 11) {
+      return "Extreme";
     }
-
-    return description;
   }
 
   // Determine wind speed description
@@ -44,29 +45,38 @@ const fetchWeather = (location, setWeatherData) => {
     } 
 
   }
+
+  const getIconPath = (url) => {
+    let path = url.split("//cdn.weatherapi.com/weather");
+    return `images${path[1]}`;
+  }
   
-    fetch(`https://api.openweathermap.org/data/2.5/weather?q=${location}&appid=18190a28c8d812d9dc3714989488cdfb&units=imperial`)
+    fetch(`https://api.weatherapi.com/v1/current.json?key=b310be3a8dea452cb8723327230107&q=${location}&aqi=yes`)
       .then((res) => {
         if (res.ok) {
           res.json().then(data => {
-
-            let cl = convertCase(data.weather[0]["description"]);
-            let windSpeedDescr = windDescr(data.wind.speed);
+            let windSpeedDescr = windDescr(data.current.wind_mph);
+            let iconPath = getIconPath(data.current.condition.icon);
+            let index = uvDescr(data.current.uv) + `, ${data.current.uv}`;
             
             // Update weather information
+            console.log(data)
+            
             setWeatherData(() => {
               return {
-                temp: Math.round(data.main.temp),
+                temp: Math.round(data.current.temp_f),
                 windSpeedDescription: windSpeedDescr,
-                feelsLike: Math.round(data.main.feels_like),
-                clouds: cl,
-                icon: data.weather[0]["icon"],
-                windSpeed: Math.round(data.wind.speed),
-                humidity: data.main.humidity,
-                pressure: data.main.pressure
+                feelsLike: Math.round(data.current.feelslike_f),
+                clouds: data.current.condition.text,
+                icon: iconPath,
+                windSpeed: Math.round(data.current.wind_mph) + "mph " + data.current.wind_dir,
+                humidity: data.current.humidity,
+                pressure: data.current.pressure_in,
+                visibility: data.current.vis_miles + " miles",
+                uvIndex: index,
               }
             })
-     
+            
           })
         } else {
           alert("Please enter a valid city")

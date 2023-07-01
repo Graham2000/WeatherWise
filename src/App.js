@@ -30,10 +30,11 @@ const SearchBar = (props) => {
 
 // destructure
 const Primary = (props) => {
-  let imgURL = `https://openweathermap.org/img/wn/${props.weatherData.icon}@2x.png`
+  let imgURL = `./${props.weatherData.icon}`
+
   return (
     <>
-      <div className='row'>
+      <div className='row align-items-center'>
         <div className='col d-flex align-items-center justify-content-end p-0 pe-2'>
         <img src={imgURL} style={{width:'60px'}}></img>
         </div>
@@ -43,7 +44,7 @@ const Primary = (props) => {
         </div>
       </div>
       <h1>{props.weatherData.temp}°F</h1>
-      <h5 className='fst-italic'>Feels like {props.weatherData.feelsLike} °F</h5>
+      <h5 className='fst-italic'>Feels like {props.weatherData.feelsLike}°F</h5>
     </>
   );
 }
@@ -53,11 +54,13 @@ const Statistics = (props) => {
     <div className='border rounded p-5 m-3 mt-5 text-center'>
       <div className='row'>
         <div className='col'>
-          <p>Wind: {props.weatherData.windSpeed} mph</p>
+          <p>Wind: {props.weatherData.windSpeed}</p>
           <p>Pressure: {props.weatherData.pressure} inHg</p>
+          <p>UV Index: {props.weatherData.uvIndex}</p>
         </div>
         <div className='col'>
           <p>Humidity: {props.weatherData.humidity}%</p>
+          <p>Visibility: {props.weatherData.visibility}</p>
         </div>
       </div>
     </div>
@@ -74,6 +77,8 @@ function App() {
     windSpeed: "",
     humidity: "",
     pressure: "",
+    visibility: "",
+    uvIndex: "",
   });
 
   // Initialize data
