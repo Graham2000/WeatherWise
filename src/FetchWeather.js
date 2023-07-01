@@ -55,7 +55,7 @@ const fetchWeather = (location, setWeatherData) => {
       .then((res) => {
         if (res.ok) {
           res.json().then(data => {
-            let windSpeedDescr = windDescr(data.current.wind_mph);
+            let windSpeedDescr = windDescr(Math.round(data.current.wind_mph));
             let iconPath = getIconPath(data.current.condition.icon);
             let index = uvDescr(data.current.uv) + `, ${data.current.uv}`;
             
