@@ -1,16 +1,16 @@
 {
   "files": {
-    "main.css": "/WeatherWise.git/static/css/main.e6c13ad2.css",
-    "main.js": "/WeatherWise.git/static/js/main.58177f74.js",
-    "static/js/787.24c152f8.chunk.js": "/WeatherWise.git/static/js/787.24c152f8.chunk.js",
-    "static/media/logo.svg": "/WeatherWise.git/static/media/logo.6ce24c58023cc2f8fd88fe9d219db6c6.svg",
-    "index.html": "/WeatherWise.git/index.html",
-    "main.e6c13ad2.css.map": "/WeatherWise.git/static/css/main.e6c13ad2.css.map",
-    "main.58177f74.js.map": "/WeatherWise.git/static/js/main.58177f74.js.map",
-    "787.24c152f8.chunk.js.map": "/WeatherWise.git/static/js/787.24c152f8.chunk.js.map"
+    "main.css": "/WeatherWise/static/css/main.e6c13ad2.css",
+    "main.js": "/WeatherWise/static/js/main.31efb8a5.js",
+    "static/js/787.24c152f8.chunk.js": "/WeatherWise/static/js/787.24c152f8.chunk.js",
+    "static/media/logo.svg": "/WeatherWise/static/media/logo.6ce24c58023cc2f8fd88fe9d219db6c6.svg",
+    "index.html": "/WeatherWise/index.html",
+    "main.e6c13ad2.css.map": "/WeatherWise/static/css/main.e6c13ad2.css.map",
+    "main.31efb8a5.js.map": "/WeatherWise/static/js/main.31efb8a5.js.map",
+    "787.24c152f8.chunk.js.map": "/WeatherWise/static/js/787.24c152f8.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.e6c13ad2.css",
-    "static/js/main.58177f74.js"
+    "static/js/main.31efb8a5.js"
   ]
 }
