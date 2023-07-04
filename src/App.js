@@ -1,6 +1,7 @@
 import logo from './logo.svg';
 import { useEffect, useState } from 'react';
 import fetchWeather from './FetchWeather';
+import HourlyForecast from './HourlyForecast';
 
 const SearchBar = (props) => {
 
@@ -79,6 +80,11 @@ function App() {
     pressure: "",
     visibility: "",
     uvIndex: "",
+    hourlyData: {
+      time: [],
+      temp: [],
+      icon: [],
+    }
   });
 
   // Initialize data
@@ -87,11 +93,18 @@ function App() {
   }, [])
 
   return (
-    <div className='container text-center mt-5' style={{maxWidth:'900px'}}>
+    <div className='container text-center mt-5 mb-5' style={{maxWidth:'900px'}}>
       <SearchBar setWeatherData={setWeatherData} />
       <div className='container p-5 mt-3 border rounded'>
         <Primary weatherData={weatherData} />
         <Statistics weatherData={weatherData} />
+
+        <h5 className='mt-5 mb-3'>Hourly Forecast</h5>
+        <HourlyForecast hourlyData={weatherData.hourlyData} />
+
+        <h5 className='mt-5 mb-3'>Weather this week</h5>
+
+
       </div>
     </div>
   );

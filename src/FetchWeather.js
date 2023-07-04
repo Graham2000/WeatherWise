@@ -50,8 +50,24 @@ const fetchWeather = (location, setWeatherData) => {
     let path = url.split("//cdn.weatherapi.com/weather");
     return `images${path[1]}`;
   }
+
+  const convertTime = (epoch) => {
+    let hours = new Date(epoch * 1000).getHours();
+
+    let ampm = hours >= 12 ? "PM" : "AM";
+
+    if (hours > 12) {
+      hours -= 12;
+    }
+
+    if (hours === 0) {
+      hours = 12
+    }
+
+    return `${hours} ${ampm}`;
+  }
   
-    fetch(`https://api.weatherapi.com/v1/current.json?key=b310be3a8dea452cb8723327230107&q=${location}&aqi=yes`)
+    fetch(`http://api.weatherapi.com/v1/forecast.json?key=b310be3a8dea452cb8723327230107&q=${location}&days=7&aqi=yes&alerts=no`)
       .then((res) => {
         if (res.ok) {
           res.json().then(data => {
@@ -60,7 +76,28 @@ const fetchWeather = (location, setWeatherData) => {
             let index = uvDescr(data.current.uv) + `, ${data.current.uv}`;
             
             // Update weather information
-            console.log(data)
+            //console.log(data)
+
+            // Hourly Forecast
+            let currentTime = new Date().getTime();
+            let hourlyForecast = data.forecast.forecastday[0];
+
+            let hourlyData = {
+              time: [],
+              temp: [],
+              icon: []
+            }
+
+            hourlyForecast.hour.forEach((hourData) => {
+              // Only display hours after current timestamp
+              if (hourData.time_epoch >= (currentTime / 1000)) {
+                hourlyData.time.push(
+                  convertTime(hourData.time_epoch)
+                );
+                hourlyData.temp.push(Math.round(hourData.temp_f));
+                hourlyData.icon.push(hourData.condition.icon);
+              }
+            })
             
             setWeatherData(() => {
               return {
@@ -74,6 +111,7 @@ const fetchWeather = (location, setWeatherData) => {
                 pressure: data.current.pressure_in,
                 visibility: data.current.vis_miles + " miles",
                 uvIndex: index,
+                hourlyData: hourlyData,
               }
             })
             
