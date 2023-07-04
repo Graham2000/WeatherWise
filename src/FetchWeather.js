@@ -51,8 +51,9 @@ const fetchWeather = (location, setWeatherData) => {
     return `images${path[1]}`;
   }
 
-  const convertTime = (epoch) => {
-    let hours = new Date(epoch * 1000).getHours();
+  // Convert 24hr to local time
+  const convertTime = (time) => {
+    let hours = time;
 
     let ampm = hours >= 12 ? "PM" : "AM";
 
@@ -65,6 +66,32 @@ const fetchWeather = (location, setWeatherData) => {
     }
 
     return `${hours} ${ampm}`;
+
+    /*
+    let hours = new Date(epoch * 1000).getHours();
+
+    let ampm = hours >= 12 ? "PM" : "AM";
+
+    if (hours > 12) {
+      hours -= 12;
+    }
+
+    if (hours === 0) {
+      hours = 12
+    }
+
+    return `${hours} ${ampm}`;*/
+  }
+
+  // Retrieve hour from time and convert to type Num
+  let convertHour = (hourStr) => {
+    let num = "";
+    for (let str of hourStr) {
+      if (str === ":") break;
+      num += str;
+    }
+
+    return Number(num);
   }
   
     fetch(`http://api.weatherapi.com/v1/forecast.json?key=b310be3a8dea452cb8723327230107&q=${location}&days=7&aqi=yes&alerts=no`)
@@ -76,11 +103,11 @@ const fetchWeather = (location, setWeatherData) => {
             let index = uvDescr(data.current.uv) + `, ${data.current.uv}`;
             
             // Update weather information
-            //console.log(data)
+            console.log(data)
 
             // Hourly Forecast
-            let currentTime = new Date().getTime();
-            let hourlyForecast = data.forecast.forecastday[0];
+            let hourlyForecastDay1 = data.forecast.forecastday[0];
+            let hourlyForecastDay2 = data.forecast.forecastday[1];
 
             let hourlyData = {
               time: [],
@@ -88,15 +115,30 @@ const fetchWeather = (location, setWeatherData) => {
               icon: []
             }
 
-            hourlyForecast.hour.forEach((hourData) => {
-              // Only display hours after current timestamp
-              if (hourData.time_epoch >= (currentTime / 1000)) {
+            let localHour = convertHour(data.location.localtime.split(" ")[1]);
+            
+            //console.log("Local HOUR", localHour);
+
+            // Add hourly forecast for current day after current time
+            hourlyForecastDay1.hour.forEach((hourData) => {
+              let forecastHour = convertHour(hourData.time.split(" ")[1]);
+              if (forecastHour > localHour) {
                 hourlyData.time.push(
-                  convertTime(hourData.time_epoch)
+                  convertTime(forecastHour)
                 );
                 hourlyData.temp.push(Math.round(hourData.temp_f));
                 hourlyData.icon.push(hourData.condition.icon);
               }
+            })
+
+            // Add next day hourly forecast after previous expires
+            hourlyForecastDay2.hour.forEach((hourData) => {
+              let forecastHour = convertHour(hourData.time.split(" ")[1]);
+              hourlyData.time.push(
+                convertTime(forecastHour)
+              );
+              hourlyData.temp.push(Math.round(hourData.temp_f));
+              hourlyData.icon.push(hourData.condition.icon);
             })
             
             setWeatherData(() => {
