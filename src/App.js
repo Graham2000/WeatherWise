@@ -2,6 +2,7 @@ import logo from './logo.svg';
 import { useEffect, useState } from 'react';
 import fetchWeather from './FetchWeather';
 import HourlyForecast from './HourlyForecast';
+import WeekForcast from './WeekForecast';
 
 const SearchBar = (props) => {
 
@@ -52,16 +53,25 @@ const Primary = (props) => {
 
 const Statistics = (props) => {
   return (
-    <div className='border rounded p-5 m-3 mt-5 text-center'>
+    <div className='border rounded p-4 m-3 mt-5 text-center'>
       <div className='row'>
-        <div className='col'>
-          <p>Wind: {props.weatherData.windSpeed}</p>
-          <p>Pressure: {props.weatherData.pressure} inHg</p>
-          <p>UV Index: {props.weatherData.uvIndex}</p>
+        <div className='col pb-4'>
+          <h5 className='mt-4 fw-bold'>Wind</h5>
+          {props.weatherData.windSpeed}
+          <h5 className='mt-4 fw-bold'>Pressure</h5>
+          {props.weatherData.pressure} inHg
         </div>
-        <div className='col'>
-          <p>Humidity: {props.weatherData.humidity}%</p>
-          <p>Visibility: {props.weatherData.visibility}</p>
+        <div className='col pb-4'>
+          <h5 className='mt-4 fw-bold'>Visibility</h5>
+          {props.weatherData.visibility}
+          <h5 className='mt-4 fw-bold'>UV Index</h5>
+          {props.weatherData.uvIndex}
+        </div>
+        <div className='col pb-4'>
+          <h5 className='mt-4 fw-bold'>Humidity</h5>
+            {props.weatherData.humidity}%
+          <h5 className='mt-4 fw-bold'>Precipitation</h5>
+          {props.weatherData.precipitation} in
         </div>
       </div>
     </div>
@@ -80,10 +90,18 @@ function App() {
     pressure: "",
     visibility: "",
     uvIndex: "",
+    precipitation: "",
     hourlyData: {
       time: [],
       temp: [],
       icon: [],
+    },
+    weekData: {
+      date: [],
+      tempHigh: [],
+      tempLow: [],
+      icon: [],
+      description: []
     }
   });
 
@@ -102,9 +120,8 @@ function App() {
         <h5 className='mt-5 mb-3'>Hourly Forecast</h5>
         <HourlyForecast hourlyData={weatherData.hourlyData} />
 
-        <h5 className='mt-5 mb-3'>Weather this week</h5>
-
-
+        <h5 className='mt-5 mb-4'>Weather this week</h5>
+        <WeekForcast weekData={weatherData.weekData} />
       </div>
     </div>
   );
