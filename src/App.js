@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import fetchWeather from './FetchWeather';
 import HourlyForecast from './HourlyForecast';
 import WeekForcast from './WeekForecast';
+import Navbar from './Navbar';
 
 const SearchBar = (props) => {
 
@@ -20,17 +21,18 @@ const SearchBar = (props) => {
 
   return (
     <>
-      <button onClick={handleClick} type='submit' className='btn btn-outline-dark'>
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-search" viewBox="0 0 16 16">
-          <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
-          </svg>
-      </button>
-      <input name="location" onChange={handleChange} defaultValue="New York" className='border-0 border-bottom p-2 mb-5' style={{outline:'none'}} />
+      <div className='d-flex flex-row align-items-top justify-content-center mb-5'>
+          <button onClick={handleClick} type='submit' className='btn btn-primary p-2 rounded-0'>
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-search" viewBox="0 0 16 16">
+              <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
+            </svg>
+          </button>
+          <input name="location" onChange={handleChange} defaultValue="New York" className='border p-2' style={{outline:'none'}} />
+      </div>
     </>
   );
 }
 
-// destructure
 const Primary = (props) => {
   let imgURL = `./${props.weatherData.icon}`
 
@@ -105,23 +107,32 @@ function App() {
     }
   });
 
+  const [color, setColor] = useState({
+    background: "bg-light",
+    text: "text-dark"
+  });
+
   // Initialize data
   useEffect(() => {
     fetchWeather("New York", setWeatherData);
   }, [])
 
   return (
-    <div className='container text-center mt-5 mb-5' style={{maxWidth:'900px'}}>
-      <SearchBar setWeatherData={setWeatherData} />
-      <div className='container p-5 mt-3 border rounded'>
-        <Primary weatherData={weatherData} />
-        <Statistics weatherData={weatherData} />
+    <div className={color.background + ' ' + color.text}>
+      <Navbar setColor={setColor} />
 
-        <h5 className='mt-5 mb-3'>Hourly Forecast</h5>
-        <HourlyForecast hourlyData={weatherData.hourlyData} />
+      <div className='container text-center mt-5 pb-5' style={{maxWidth:'900px'}}>
+        <SearchBar setWeatherData={setWeatherData} />
+        <div className='container p-5 mt-3 rounded'>
+          <Primary weatherData={weatherData} />
+          <Statistics weatherData={weatherData} />
 
-        <h5 className='mt-5 mb-4'>Weather this week</h5>
-        <WeekForcast weekData={weatherData.weekData} />
+          <h5 className='mt-5 mb-3'>Hourly Forecast</h5>
+          <HourlyForecast hourlyData={weatherData.hourlyData} />
+
+          <h5 className='mt-5 mb-4'>Weather this week</h5>
+          <WeekForcast weekData={weatherData.weekData} />
+        </div>
       </div>
     </div>
   );
