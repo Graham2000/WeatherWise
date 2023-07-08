@@ -166,7 +166,7 @@ const fetchWeather = (location, setWeatherData) => {
     return `${dayOfWeek}, ${month} ${pDate[2]}`
   }
   
-    fetch(`http://api.weatherapi.com/v1/forecast.json?key=b310be3a8dea452cb8723327230107&q=${location}&days=7&aqi=yes&alerts=no`)
+    fetch(`https://api.weatherapi.com/v1/forecast.json?key=b310be3a8dea452cb8723327230107&q=${location}&days=7&aqi=yes&alerts=no`)
       .then((res) => {
         if (res.ok) {
           res.json().then(data => {
