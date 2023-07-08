@@ -1,4 +1,4 @@
-import { Temporal, Intl, toTemporalInstant } from '@js-temporal/polyfill';
+import { Temporal } from '@js-temporal/polyfill';
 
 
 const fetchWeather = (location, setWeatherData) => {
@@ -41,7 +41,7 @@ const fetchWeather = (location, setWeatherData) => {
       return "Strong gale";
     } else if (speed >= 48 && speed <= 55) {
       return "Storm";
-    } else if (speed >= 64 && 72 <= 72) {
+    } else if (speed >= 64 && speed <= 72) {
       return "Violent storm";
     } else if (speed >= 73) {
       return "Hurricane-force";
@@ -69,21 +69,6 @@ const fetchWeather = (location, setWeatherData) => {
     }
 
     return `${hours} ${ampm}`;
-
-    /*
-    let hours = new Date(epoch * 1000).getHours();
-
-    let ampm = hours >= 12 ? "PM" : "AM";
-
-    if (hours > 12) {
-      hours -= 12;
-    }
-
-    if (hours === 0) {
-      hours = 12
-    }
-
-    return `${hours} ${ampm}`;*/
   }
 
   // Retrieve hour from time and convert to type Num
@@ -109,11 +94,11 @@ const fetchWeather = (location, setWeatherData) => {
     date.push(year);
 
     // Remove leading zero from month and day
-    if (month[0] == "0") {
+    if (month[0] === "0") {
       month = month.slice(1);
     }
 
-    if (day[0] == "0") {
+    if (day[0] === "0") {
       day = day.slice(1);
     }
 
@@ -123,25 +108,23 @@ const fetchWeather = (location, setWeatherData) => {
     return date;
   }
 
-  //convert date
   let getDayOfWeek = (pDate) => {
-    //console.log(pDate)
     // Get day of week given a month, day, and year
     const monthDay = Temporal.PlainMonthDay.from({ month: pDate[1], day: pDate[2] }); // => 07-14
     const date = monthDay.toPlainDate({ year: pDate[0] }); // => 2030-07-14
 
     let day = date.dayOfWeek;
-    if (day == 1) {
+    if (day === 1) {
       return "Monday";
-    } else if (day == 2) {
+    } else if (day === 2) {
       return "Tuesday";
-    } else if (day == 3) {
+    } else if (day === 3) {
       return "Wednesday";
-    } else if (day == 4) {
+    } else if (day === 4) {
       return "Thursday";
-    } else if (day == 5) {
+    } else if (day === 5) {
       return "Friday";
-    } else if (day == 6) {
+    } else if (day === 6) {
       return "Saturday";
     } else {
       return "Sunday";
@@ -151,27 +134,27 @@ const fetchWeather = (location, setWeatherData) => {
   let getMonth = (pDate) => {
     let month = pDate[1];
 
-    if (month == 1) {
+    if (month === 1) {
       return "Jan";
-    } else if (month == 2) {
+    } else if (month === 2) {
       return "Feb";
-    } else if (month == 3) {
+    } else if (month === 3) {
       return "March";
-    } else if (month ==4) {
+    } else if (month === 4) {
       return "April";
-    } else if (month == 5) {
+    } else if (month === 5) {
       return "May";
-    } else if (month == 6) {
+    } else if (month === 6) {
       return "June";
-    } else if (month == 7) {
+    } else if (month === 7) {
       return "Jul";
-    } else if (month == 8) {
+    } else if (month === 8) {
       return "Aug";
-    } else if (month == 9) {
+    } else if (month === 9) {
       return "Sep";
-    } else if (month == 10) {
+    } else if (month === 10) {
       return "Oct";
-    } else if (month == 11) {
+    } else if (month === 11) {
       return "Nov";
     } else {
       return "Dec";
@@ -190,9 +173,6 @@ const fetchWeather = (location, setWeatherData) => {
             let windSpeedDescr = windDescr(Math.round(data.current.wind_mph));
             let iconPath = getIconPath(data.current.condition.icon);
             let index = uvDescr(data.current.uv) + `, ${data.current.uv}`;
-            
-            // Update weather information
-            //console.log(data)
 
             // Hourly Forecast
             let hourlyForecastDay1 = data.forecast.forecastday[0];
@@ -211,20 +191,6 @@ const fetchWeather = (location, setWeatherData) => {
               icon: [],
               description: []
             }
-
-
-
-
-
-
-            /////
-            // Get day of week given a month, day, and year
-            //const monthDay = Temporal.PlainMonthDay.from({ month: 7, day: 2 }); // => 07-14
-            //const date = monthDay.toPlainDate({ year: 2023 }); // => 2030-07-14
-            //console.log("test", date.dayOfWeek)
-            /////
-
-
 
             let localHour = convertHour(data.location.localtime.split(" ")[1]);
 
@@ -252,17 +218,13 @@ const fetchWeather = (location, setWeatherData) => {
 
             // Get week data
             data.forecast.forecastday.forEach((forecastDay) => {
-              // convert day!!
-              // Parse day
               let parsedDate = parseDate(forecastDay.date);
               let dayOfWeek = getDayOfWeek(parsedDate)
-              //console.log(dayOfWeek)
+
               let month = getMonth(parsedDate);
               let formattedDate = formatDate(parsedDate, dayOfWeek, month);
               weekData.date.push(formattedDate);
 
-              //weekData.date.push(parseDate(forecastDay.date));
-              //console.log(parseDate(forecastDay.date))
               weekData.tempHigh.push(Math.round(forecastDay.day.maxtemp_f));
               weekData.tempLow.push(Math.round(forecastDay.day.mintemp_f));
               weekData.icon.push(forecastDay.day.condition.icon);
