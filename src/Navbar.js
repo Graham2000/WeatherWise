@@ -1,11 +1,25 @@
+import { useEffect } from "react";
+
 const Navbar = (props) => {
     const handleClick = (e) => {
         if (e.target.checked) {
-            props.setColor({background: "bg-dark", text: "text-light"})
+            props.setColor({background: "bg-dark", text: "text-light"});
+            // Update ls preference
         } else {
-            props.setColor({background: "bg-light", text: "text-dark"})
+            props.setColor({background: "bg-light", text: "text-dark"});
+            // Update ls preference
         }
     }
+
+    // Store preference in local storage
+    useEffect(() => {
+        const color = {
+            background: props.color.background,
+            text: props.color.text
+        }
+        
+        localStorage.setItem("color", JSON.stringify(color));
+    }, [handleClick])
 
     return (
         <nav className="navbar navbar-expand-lg p-3 d-flex flex-row justify-content-end">
@@ -15,7 +29,7 @@ const Navbar = (props) => {
                 </svg>
             </label>
             <div className="form-check form-switch">
-                <input onClick={handleClick} className="form-check-input" type="checkbox" id="flexSwitchCheckDefault"/>
+                <input onClick={handleClick} className="form-check-input" type="checkbox" id="flexSwitchCheckDefault" defaultChecked={props.color.background == "bg-dark" && true} />
             </div>
             <label className="ms-0 d-flex align-items-center" htmlFor="flexSwitchCheckDefault">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-moon" viewBox="0 0 16 16">

@@ -108,8 +108,8 @@ function App() {
   });
 
   const [color, setColor] = useState({
-    background: "bg-light",
-    text: "text-dark"
+    background: !localStorage.getItem("color") ? "bg-light" : JSON.parse(localStorage.getItem("color")).background,
+    text: !localStorage.getItem("color") ? "text-dark" : JSON.parse(localStorage.getItem("color")).text,
   });
 
   // Initialize data
@@ -119,7 +119,7 @@ function App() {
 
   return (
     <div className={color.background + ' ' + color.text}>
-      <Navbar setColor={setColor} />
+      <Navbar color={color} setColor={setColor} />
 
       <div className='container text-center mt-5 pb-5' style={{maxWidth:'900px'}}>
         <SearchBar setWeatherData={setWeatherData} />
