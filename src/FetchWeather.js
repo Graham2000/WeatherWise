@@ -132,7 +132,7 @@ const fetchWeather = (location, setWeatherData) => {
   }
 
   let getMonth = (pDate) => {
-    let month = pDate[1];
+    let month = Number(pDate[1]);
 
     if (month === 1) {
       return "Jan";
