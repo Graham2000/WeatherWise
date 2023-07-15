@@ -6,17 +6,15 @@ import WeekForcast from './WeekForecast';
 import Navbar from './Navbar';
 
 const SearchBar = (props) => {
-
-  // Add state to input for re-render
-  const [location, setLocation] = useState("");
-
   const handleChange = (e) => {
-    setLocation(e.target.value);
+    props.setPreferences((oldPreferences) => {
+      return {...oldPreferences, location: e.target.value}
+    });
   }
 
   // Retrieve current weather and parse data
   const handleClick = () => {
-    fetchWeather(location, props.setWeatherData)
+    fetchWeather(props.preferences.location, props.setWeatherData)
   }
 
   return (
@@ -27,20 +25,19 @@ const SearchBar = (props) => {
               <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
             </svg>
           </button>
-          <input name="location" onChange={handleChange} defaultValue="New York" className='border p-2' style={{outline:'none'}} />
+          <input name="location" onChange={handleChange} defaultValue={props.preferences.location} className='border p-2' style={{outline:'none'}} />
       </div>
     </>
   );
 }
 
 const Primary = (props) => {
-  let imgURL = `./${props.weatherData.icon}`
-
+  //let imgURL = `./${props.weatherData.icon}`
   return (
     <>
       <div className='row align-items-center'>
         <div className='col d-flex align-items-center justify-content-end p-0 pe-2'>
-        <img src={imgURL} style={{width:'60px'}}></img>
+        <img src={props.weatherData.icon} style={{width:'60px'}}></img>
         </div>
         <div className='col text-start align-items-center justify-content-center p-0'>
           <p className='p-0 m-0'><b>{props.weatherData.clouds}</b></p>
@@ -107,22 +104,27 @@ function App() {
     }
   });
 
-  const [color, setColor] = useState({
-    background: !localStorage.getItem("color") ? "bg-light" : JSON.parse(localStorage.getItem("color")).background,
-    text: !localStorage.getItem("color") ? "text-dark" : JSON.parse(localStorage.getItem("color")).text,
+  // Init preferences
+  const [preferences, setPreferences] = useState({
+    background: !localStorage.getItem("preferences") ? "bg-light" : JSON.parse(localStorage.getItem("preferences")).background,
+    text: !localStorage.getItem("preferences") ? "text-dark" : JSON.parse(localStorage.getItem("preferences")).text,
+    location: !localStorage.getItem("preferences") ? "New York" : JSON.parse(localStorage.getItem("preferences")).location,
+
+
   });
 
-  // Initialize data
+  // Get weather from local storage
+  // If no location saved, default to NY
   useEffect(() => {
-    fetchWeather("New York", setWeatherData);
+    fetchWeather(preferences.location, setWeatherData);
   }, [])
 
   return (
-    <div className={color.background + ' ' + color.text}>
-      <Navbar color={color} setColor={setColor} />
+    <div className={preferences.background + ' ' + preferences.text}>
+      <Navbar preferences={preferences} setPreferences={setPreferences} />
 
       <div className='container text-center mt-5 pb-5' style={{maxWidth:'900px'}}>
-        <SearchBar setWeatherData={setWeatherData} />
+        <SearchBar preferences={preferences} setPreferences={setPreferences} setWeatherData={setWeatherData} />
         <div className='container p-5 mt-3 rounded'>
           <Primary weatherData={weatherData} />
           <Statistics weatherData={weatherData} />
@@ -130,7 +132,7 @@ function App() {
           <h5 className='mt-5 mb-3'>Hourly Forecast</h5>
           <HourlyForecast hourlyData={weatherData.hourlyData} />
 
-          <h5 className='mt-5 mb-4'>Weather this week</h5>
+          <h5 className='mt-5 mb-4'>Weather this Week</h5>
           <WeekForcast weekData={weatherData.weekData} />
         </div>
       </div>
