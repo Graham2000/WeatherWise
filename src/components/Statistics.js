@@ -1,6 +1,6 @@
 const Statistics = (props) => {
     return (
-      <div className='border rounded p-4 m-3 mt-5 text-center'>
+      <div className='border rounded p-4 mt-5 text-center'>
         <div className='row'>
           <div className='col pb-4'>
             <h5 className='mt-4 fw-bold'>Wind</h5>

@@ -28,12 +28,14 @@ function App() {
     uvIndex: "",
     precipitation_in: "",
     precipitation_mm: "",
+
     hourlyData: {
       time: [],
       temp_f: [],
       temp_c: [],
       icon: [],
     },
+    
     weekData: {
       date: [],
       tempHigh_f: [],
