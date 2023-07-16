@@ -170,16 +170,6 @@ const fetchWeather = (location, metric, setWeatherData) => {
       .then((res) => {
         if (res.ok) {
           res.json().then(data => {
-            /*
-            let windSpeed;
-
-            if (metric === "F") {
-              console.log("IS FAR")
-              windSpeed = Math.round(data.current.wind_mph) + "mph ";
-            } else {
-              windSpeed = Math.round(data.current.wind_kph) + "kph ";
-            }*/
-
             let windSpeedDescr = windDescr(Math.round(data.current.wind_mph));
 
             let iconPath = getIconPath(data.current.condition.icon);
@@ -260,27 +250,23 @@ const fetchWeather = (location, metric, setWeatherData) => {
                 feelsLike_f: Math.round(data.current.feelslike_f) + "°F",
                 feelsLike_c: Math.round(data.current.feelslike_c) + "°C",
 
-
                 clouds: data.current.condition.text,
                 icon: iconPath,
 
-
-                windSpeed_mph: Math.round(data.current.wind_mph) + "mph " + data.current.wind_dir,
-                windSpeed_kph: Math.round(data.current.wind_kph) + "kph " + data.current.wind_dir,
-
+                windSpeed_mph: Math.round(data.current.wind_mph) + " mph " + data.current.wind_dir,
+                windSpeed_kph: Math.round(data.current.wind_kph) + " kph " + data.current.wind_dir,
 
                 humidity: data.current.humidity,
-                pressure_in: data.current.pressure_in + "in",
-                pressure_mb: data.current.pressure_mb + "mb",
-
+                pressure_in: data.current.pressure_in + " in",
+                pressure_mb: data.current.pressure_mb + " mb",
 
                 visibility_mi: data.current.vis_miles + " miles",
                 visibility_km: data.current.vis_km + " km",
 
                 uvIndex: index,
                 hourlyData: hourlyData,
-                precipitation_in: data.current.precip_in + "in",
-                precipitation_mm: data.current.precip_mm + "mm",
+                precipitation_in: data.current.precip_in + " in",
+                precipitation_mm: data.current.precip_mm + " mm",
                 weekData: weekData
               }
             })

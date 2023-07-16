@@ -43,9 +43,6 @@ const Aside = (props) => {
       localStorage.setItem("preferences", JSON.stringify(preferences));
     }, [handleToggle])
 
-
-
-    //////
     const updateMetric = (e) => {
       if (e.target.checked) {
         props.setPreferences((oldPreferences) => {
@@ -58,7 +55,7 @@ const Aside = (props) => {
       }
 
     }
-  
+
     return (
         <div className={props.preferences.text + ' ' + props.preferences.background} style={props.display ? style : {display:"none"}}>
           <div className='w-100 p-3 text-end'>

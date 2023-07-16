@@ -78,8 +78,6 @@ const Statistics = (props) => {
   );
 }
 
-
-
 function App() {
   const [weatherData, setWeatherData] = useState({
     temp_f: "",
