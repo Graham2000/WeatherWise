@@ -5,78 +5,9 @@ import HourlyForecast from './components/HourlyForecast';
 import WeekForcast from './components/WeekForecast';
 import Navbar from './components/Navbar';
 import Aside from './components/Aside';
-
-const SearchBar = (props) => {
-  const handleChange = (e) => {
-    props.setPreferences((oldPreferences) => {
-      return {...oldPreferences, location: e.target.value}
-    });
-  }
-
-  // Retrieve current weather and parse data
-  const handleClick = () => {
-    fetchWeather(props.preferences.location, props.preferences.metric, props.setWeatherData)
-  }
-
-  return (
-    <>
-      <div className='d-flex flex-row align-items-top justify-content-center mb-5'>
-          <button onClick={handleClick} type='submit' className='btn btn-primary p-2 rounded-0'>
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-search" viewBox="0 0 16 16">
-              <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
-            </svg>
-          </button>
-          <input name="location" onChange={handleChange} defaultValue={props.preferences.location} className='border p-2' style={{outline:'none'}} />
-      </div>
-    </>
-  );
-}
-
-const Primary = (props) => {
-  //let imgURL = `./${props.weatherData.icon}`
-  return (
-    <>
-      <div className='row align-items-center'>
-        <div className='col d-flex align-items-center justify-content-end p-0 pe-2'>
-        <img src={props.weatherData.icon} style={{width:'60px'}}></img>
-        </div>
-        <div className='col text-start align-items-center justify-content-center p-0'>
-          <p className='p-0 m-0'><b>{props.weatherData.clouds}</b></p>
-          <p className='p-0 m-0 fw-lighter'>{props.weatherData.windSpeedDescription}</p>
-        </div>
-      </div>
-      <h1>{props.metric === "F" ? props.weatherData.temp_f : props.weatherData.temp_c}</h1>
-      <h5 className='fst-italic'>Feels like {props.metric === "F" ? props.weatherData.feelsLike_f : props.weatherData.feelsLike_c}</h5>
-    </>
-  );
-}
-
-const Statistics = (props) => {
-  return (
-    <div className='border rounded p-4 m-3 mt-5 text-center'>
-      <div className='row'>
-        <div className='col pb-4'>
-          <h5 className='mt-4 fw-bold'>Wind</h5>
-          {props.metric === "F" ? props.weatherData.windSpeed_mph : props.weatherData.windSpeed_kph}
-          <h5 className='mt-4 fw-bold'>Pressure</h5>
-          {props.metric === "F" ? props.weatherData.pressure_in : props.weatherData.pressure_mb}
-        </div>
-        <div className='col pb-4'>
-          <h5 className='mt-4 fw-bold'>Visibility</h5>
-          {props.metric === "F" ? props.weatherData.visibility_mi : props.weatherData.visibility_km}
-          <h5 className='mt-4 fw-bold'>UV Index</h5>
-          {props.weatherData.uvIndex}
-        </div>
-        <div className='col pb-4'>
-          <h5 className='mt-4 fw-bold'>Humidity</h5>
-            {props.weatherData.humidity}%
-          <h5 className='mt-4 fw-bold'>Precipitation</h5>
-          {props.metric === "F" ? props.weatherData.precipitation_in : props.weatherData.precipitation_mm}
-        </div>
-      </div>
-    </div>
-  );
-}
+import SearchBar from './components/SearchBar';
+import Primary from './components/Primary';
+import Statistics from './components/Statistics';
 
 function App() {
   const [weatherData, setWeatherData] = useState({
