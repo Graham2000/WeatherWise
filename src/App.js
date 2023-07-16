@@ -4,6 +4,7 @@ import fetchWeather from './FetchWeather';
 import HourlyForecast from './HourlyForecast';
 import WeekForcast from './WeekForecast';
 import Navbar from './Navbar';
+import Aside from './Aside';
 
 const SearchBar = (props) => {
   const handleChange = (e) => {
@@ -14,7 +15,7 @@ const SearchBar = (props) => {
 
   // Retrieve current weather and parse data
   const handleClick = () => {
-    fetchWeather(props.preferences.location, props.setWeatherData)
+    fetchWeather(props.preferences.location, props.preferences.metric, props.setWeatherData)
   }
 
   return (
@@ -44,8 +45,8 @@ const Primary = (props) => {
           <p className='p-0 m-0 fw-lighter'>{props.weatherData.windSpeedDescription}</p>
         </div>
       </div>
-      <h1>{props.weatherData.temp}°F</h1>
-      <h5 className='fst-italic'>Feels like {props.weatherData.feelsLike}°F</h5>
+      <h1>{props.metric === "F" ? props.weatherData.temp_f : props.weatherData.temp_c}</h1>
+      <h5 className='fst-italic'>Feels like {props.metric === "F" ? props.weatherData.feelsLike_f : props.weatherData.feelsLike_c}</h5>
     </>
   );
 }
@@ -56,13 +57,13 @@ const Statistics = (props) => {
       <div className='row'>
         <div className='col pb-4'>
           <h5 className='mt-4 fw-bold'>Wind</h5>
-          {props.weatherData.windSpeed}
+          {props.metric === "F" ? props.weatherData.windSpeed_mph : props.weatherData.windSpeed_kph}
           <h5 className='mt-4 fw-bold'>Pressure</h5>
-          {props.weatherData.pressure} inHg
+          {props.metric === "F" ? props.weatherData.pressure_in : props.weatherData.pressure_mb}
         </div>
         <div className='col pb-4'>
           <h5 className='mt-4 fw-bold'>Visibility</h5>
-          {props.weatherData.visibility}
+          {props.metric === "F" ? props.weatherData.visibility_mi : props.weatherData.visibility_km}
           <h5 className='mt-4 fw-bold'>UV Index</h5>
           {props.weatherData.uvIndex}
         </div>
@@ -70,35 +71,46 @@ const Statistics = (props) => {
           <h5 className='mt-4 fw-bold'>Humidity</h5>
             {props.weatherData.humidity}%
           <h5 className='mt-4 fw-bold'>Precipitation</h5>
-          {props.weatherData.precipitation} in
+          {props.metric === "F" ? props.weatherData.precipitation_in : props.weatherData.precipitation_mm}
         </div>
       </div>
     </div>
   );
 }
 
+
+
 function App() {
   const [weatherData, setWeatherData] = useState({
-    temp: "",
+    temp_f: "",
+    temp_c: "",
     windSpeedDescription: "",
-    feelsLike: "",
+    feelsLike_f: "",
+    feelsLike_c: "",
     clouds: "",
     icon: "",
-    windSpeed: "",
+    windSpeed_mph: "",
+    windSpeed_kph: "",
     humidity: "",
-    pressure: "",
-    visibility: "",
+    pressure_in: "",
+    pressure_mb: "",
+    visibility_mi: "",
+    visibility_km: "",
     uvIndex: "",
-    precipitation: "",
+    precipitation_in: "",
+    precipitation_mm: "",
     hourlyData: {
       time: [],
-      temp: [],
+      temp_f: [],
+      temp_c: [],
       icon: [],
     },
     weekData: {
       date: [],
-      tempHigh: [],
-      tempLow: [],
+      tempHigh_f: [],
+      tempLow_f: [],
+      tempHigh_c: [],
+      tempLow_c: [],
       icon: [],
       description: []
     }
@@ -109,34 +121,38 @@ function App() {
     background: !localStorage.getItem("preferences") ? "bg-light" : JSON.parse(localStorage.getItem("preferences")).background,
     text: !localStorage.getItem("preferences") ? "text-dark" : JSON.parse(localStorage.getItem("preferences")).text,
     location: !localStorage.getItem("preferences") ? "New York" : JSON.parse(localStorage.getItem("preferences")).location,
-
-
+    metric: !localStorage.getItem("preferences") ? "F" : JSON.parse(localStorage.getItem("preferences")).metric
   });
 
   // Get weather from local storage
   // If no location saved, default to NY
   useEffect(() => {
-    fetchWeather(preferences.location, setWeatherData);
+    fetchWeather(preferences.location, preferences.metric, setWeatherData);
   }, [])
 
+  // Display aside information
+  const [display, setDisplay] = useState(false);
+
   return (
-    <div className={preferences.background + ' ' + preferences.text}>
-      <Navbar preferences={preferences} setPreferences={setPreferences} />
+    <>
+      <Aside preferences={preferences} setPreferences={setPreferences} display={display} setDisplay={setDisplay} />
+      <div className={preferences.background + ' ' + preferences.text} style={display ? {display:"none"} : {display:"block"}}>
+        <Navbar setDisplay={setDisplay} preferences={preferences} setPreferences={setPreferences} />
+        <div className='container text-center mt-5 pb-5' style={{maxWidth:'900px'}}>
+          <SearchBar preferences={preferences} setPreferences={setPreferences} setWeatherData={setWeatherData} />
+          <div className='container p-5 mt-3 rounded'>
+            <Primary metric={preferences.metric} weatherData={weatherData} />
+            <Statistics metric={preferences.metric} weatherData={weatherData} />
 
-      <div className='container text-center mt-5 pb-5' style={{maxWidth:'900px'}}>
-        <SearchBar preferences={preferences} setPreferences={setPreferences} setWeatherData={setWeatherData} />
-        <div className='container p-5 mt-3 rounded'>
-          <Primary weatherData={weatherData} />
-          <Statistics weatherData={weatherData} />
+            <h5 className='mt-5 mb-3'>Hourly Forecast</h5>
+            <HourlyForecast metric={preferences.metric} hourlyData={weatherData.hourlyData} />
 
-          <h5 className='mt-5 mb-3'>Hourly Forecast</h5>
-          <HourlyForecast hourlyData={weatherData.hourlyData} />
-
-          <h5 className='mt-5 mb-4'>Weather this Week</h5>
-          <WeekForcast weekData={weatherData.weekData} />
+            <h5 className='mt-5 mb-4'>Weather this Week</h5>
+            <WeekForcast metric={preferences.metric} weekData={weatherData.weekData} />
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }
 

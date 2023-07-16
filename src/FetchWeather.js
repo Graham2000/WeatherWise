@@ -1,7 +1,7 @@
 import { Temporal } from '@js-temporal/polyfill';
 
 
-const fetchWeather = (location, setWeatherData) => {
+const fetchWeather = (location, metric, setWeatherData) => {
   // Set UV description
   const uvDescr = (index) => {
     if (index >= 0 && index <= 2) {
@@ -170,7 +170,18 @@ const fetchWeather = (location, setWeatherData) => {
       .then((res) => {
         if (res.ok) {
           res.json().then(data => {
+            /*
+            let windSpeed;
+
+            if (metric === "F") {
+              console.log("IS FAR")
+              windSpeed = Math.round(data.current.wind_mph) + "mph ";
+            } else {
+              windSpeed = Math.round(data.current.wind_kph) + "kph ";
+            }*/
+
             let windSpeedDescr = windDescr(Math.round(data.current.wind_mph));
+
             let iconPath = getIconPath(data.current.condition.icon);
             let index = uvDescr(data.current.uv) + `, ${data.current.uv}`;
 
@@ -180,14 +191,17 @@ const fetchWeather = (location, setWeatherData) => {
 
             let hourlyData = {
               time: [],
-              temp: [],
+              temp_f: [],
+              temp_c: [],
               icon: []
             }
 
             let weekData = {
               date: [],
-              tempHigh: [],
-              tempLow: [],
+              tempHigh_f: [],
+              tempLow_f: [],
+              tempHigh_c: [],
+              tempLow_c: [],
               icon: [],
               description: []
             }
@@ -201,7 +215,8 @@ const fetchWeather = (location, setWeatherData) => {
                 hourlyData.time.push(
                   convertTime(forecastHour)
                 );
-                hourlyData.temp.push(Math.round(hourData.temp_f));
+                hourlyData.temp_f.push(Math.round(hourData.temp_f));
+                hourlyData.temp_c.push(Math.round(hourData.temp_c));
                 hourlyData.icon.push(hourData.condition.icon);
               }
             })
@@ -212,7 +227,8 @@ const fetchWeather = (location, setWeatherData) => {
               hourlyData.time.push(
                 convertTime(forecastHour)
               );
-              hourlyData.temp.push(Math.round(hourData.temp_f));
+              hourlyData.temp_f.push(Math.round(hourData.temp_f));
+              hourlyData.temp_c.push(Math.round(hourData.temp_c));
               hourlyData.icon.push(hourData.condition.icon);
             })
 
@@ -225,26 +241,46 @@ const fetchWeather = (location, setWeatherData) => {
               let formattedDate = formatDate(parsedDate, dayOfWeek, month);
               weekData.date.push(formattedDate);
 
-              weekData.tempHigh.push(Math.round(forecastDay.day.maxtemp_f));
-              weekData.tempLow.push(Math.round(forecastDay.day.mintemp_f));
+              weekData.tempHigh_f.push(Math.round(forecastDay.day.maxtemp_f));
+              weekData.tempLow_f.push(Math.round(forecastDay.day.mintemp_f));
+              weekData.tempHigh_c.push(Math.round(forecastDay.day.maxtemp_c));
+              weekData.tempLow_c.push(Math.round(forecastDay.day.mintemp_c));
+
               weekData.icon.push(forecastDay.day.condition.icon);
               weekData.description.push(forecastDay.day.condition.text);
             })
             
             setWeatherData(() => {
               return {
-                temp: Math.round(data.current.temp_f),
+                temp_f: Math.round(data.current.temp_f) + "°F",
+                temp_c: Math.round(data.current.temp_c) + "°C",
+
                 windSpeedDescription: windSpeedDescr,
-                feelsLike: Math.round(data.current.feelslike_f),
+
+                feelsLike_f: Math.round(data.current.feelslike_f) + "°F",
+                feelsLike_c: Math.round(data.current.feelslike_c) + "°C",
+
+
                 clouds: data.current.condition.text,
                 icon: iconPath,
-                windSpeed: Math.round(data.current.wind_mph) + "mph " + data.current.wind_dir,
+
+
+                windSpeed_mph: Math.round(data.current.wind_mph) + "mph " + data.current.wind_dir,
+                windSpeed_kph: Math.round(data.current.wind_kph) + "kph " + data.current.wind_dir,
+
+
                 humidity: data.current.humidity,
-                pressure: data.current.pressure_in,
-                visibility: data.current.vis_miles + " miles",
+                pressure_in: data.current.pressure_in + "in",
+                pressure_mb: data.current.pressure_mb + "mb",
+
+
+                visibility_mi: data.current.vis_miles + " miles",
+                visibility_km: data.current.vis_km + " km",
+
                 uvIndex: index,
                 hourlyData: hourlyData,
-                precipitation: data.current.precip_in,
+                precipitation_in: data.current.precip_in + "in",
+                precipitation_mm: data.current.precip_mm + "mm",
                 weekData: weekData
               }
             })

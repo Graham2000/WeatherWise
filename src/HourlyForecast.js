@@ -5,7 +5,7 @@ const HourlyForecast = (props) => {
   let weatherCard = props.hourlyData.time.map((time, i) => {
     return (
       <div key={i} className="weatherCard">
-        <p>{props.hourlyData.temp[i]}°</p>
+        <p>{props.metric === "F" ? props.hourlyData.temp_f[i] : props.hourlyData.temp_c[i]}°</p>
         <img className="m-3" src={props.hourlyData.icon[i]}></img>
         <p>{time}</p>
       </div>

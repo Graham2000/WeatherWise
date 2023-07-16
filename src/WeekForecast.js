@@ -15,10 +15,10 @@ const WeekForcast = (props) => {
 
                     <div className="col text-start">
 
-                        {props.weekData.tempHigh[i]}° {  }
+                        {props.metric === "F" ? props.weekData.tempHigh_f[i] : props.weekData.tempHigh_c[i]}° {  }
                         <br></br>
                         <span className="fw-light">
-                            {props.weekData.tempLow[i]}°
+                            {props.metric === "F" ? props.weekData.tempLow_f[i] : props.weekData.tempLow_c[i]}°
                         </span>
 
                     </div>
