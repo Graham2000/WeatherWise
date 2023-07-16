@@ -1,10 +1,10 @@
 import logo from './logo.svg';
 import { useEffect, useState } from 'react';
-import fetchWeather from './FetchWeather';
-import HourlyForecast from './HourlyForecast';
-import WeekForcast from './WeekForecast';
-import Navbar from './Navbar';
-import Aside from './Aside';
+import fetchWeather from './hooks/FetchWeather';
+import HourlyForecast from './components/HourlyForecast';
+import WeekForcast from './components/WeekForecast';
+import Navbar from './components/Navbar';
+import Aside from './components/Aside';
 
 const SearchBar = (props) => {
   const handleChange = (e) => {
