@@ -35,7 +35,7 @@ function App() {
       temp_c: [],
       icon: [],
     },
-    
+
     weekData: {
       date: [],
       tempHigh_f: [],
@@ -71,7 +71,7 @@ function App() {
         <Navbar setDisplay={setDisplay} preferences={preferences} setPreferences={setPreferences} />
         <div className='container text-center mt-5 pb-5' style={{maxWidth:'900px'}}>
           <SearchBar preferences={preferences} setPreferences={setPreferences} setWeatherData={setWeatherData} />
-          <div className='container p-5 mt-3 rounded'>
+          <div className='container p-0 mt-3 rounded'>
             <Primary metric={preferences.metric} weatherData={weatherData} />
             <Statistics metric={preferences.metric} weatherData={weatherData} />
 
